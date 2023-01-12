@@ -30,7 +30,6 @@ const Home = () => {
 
 export default Home;
 
-
 const StContainer = styled.div`
   position: relative;
   width: 100%;

@@ -1,5 +1,3 @@
-// src/redux/modules/counterSlice.js
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -19,9 +17,9 @@ export const __addGuestbookThunk = createAsyncThunk(
   }
 );
 
-///////// 게시글 조회 thunk,GET ///////////////////
+///////// 전체 게시글 조회 thunk,GET ///////////////////
 export const __getGuestbookThunk = createAsyncThunk(
-  "GET_GUESTBOOK",
+  "GET_GUESTBOOKS",
   async (payload, thunkAPI) => {
     try {
       const { data } = await axios.get(`http://localhost:3001/guestBooks`);
@@ -45,9 +43,43 @@ export const __deleteGuestbookThunk = createAsyncThunk(
   }
 );
 
+/////////////// 게시글 수정 ////////////////////////
+export const __updateGuestbookThunk = createAsyncThunk(
+  "UPDATE_GUESTBOOK",
+  async (payload, thunkAPI) => {
+    try {
+      axios.patch(`http://localhost:3001/guestBooks/${payload.id}`, payload);
+      return thunkAPI.fulfillWithValue(payload);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.code);
+    }
+  }
+);
+
+/////////// 단일 게시글 조회 /////////////////
+export const __getDetail = createAsyncThunk(
+  "GET_GUESTBOOK",
+  async (payload, thunkAPI) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3001/guestBooks/${payload}`
+      );
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.code);
+    }
+  }
+);
+
 ///////////// initialState //////////////////////////
 const initialState = {
   guestbooks: [],
+  guestbook: {
+    id: 0,
+    content: "",
+    username: "",
+    title: "",
+  },
   error: null,
   isLoading: false,
   isSuccess: false,
@@ -58,9 +90,9 @@ export const guestBooksSlice = createSlice({
   name: "guestbooks",
   initialState,
   reducers: {
-    clearGuestbook: (state, action) => {
-      state.isSuccess = false;
-    },
+    // clearGuestbook: (state, action) => {
+    //   state.isSuccess = false;
+    // },
   },
   extraReducers: {
     [__getGuestbookThunk.pending]: (state) => {
@@ -74,6 +106,7 @@ export const guestBooksSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+
     [__addGuestbookThunk.pending]: (state) => {
       state.isSuccess = false;
       state.isLoading = true;
@@ -87,6 +120,7 @@ export const guestBooksSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+
     [__deleteGuestbookThunk.fulfilled]: (state, action) => {
       const target = state.guestbooks.findIndex(
         (comment) => comment.id === action.payload
@@ -95,10 +129,33 @@ export const guestBooksSlice = createSlice({
     },
     [__deleteGuestbookThunk.rejected]: () => {},
     [__deleteGuestbookThunk.pending]: () => {},
+
+    [__getDetail.fulfilled]: (state, action) => {
+      state.guestbook = action.payload;
+    },
+    [__getDetail.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__getDetail.pending]: (state) => {
+      state.isLoading = true;
+    },
+
+    [__updateGuestbookThunk.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.guestbook = action.payload;
+    },
+    [__updateGuestbookThunk.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [__updateGuestbookThunk.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
 // 액션크리에이터는 컴포넌트에서 사용하기 위해 export 하고
-export const { clearGuestbook } = guestBooksSlice.actions;
+// export const {} = guestBooksSlice.actions;
 // reducer 는 configStore에 등록하기 위해 export default 합니다.
 export default guestBooksSlice.reducer;

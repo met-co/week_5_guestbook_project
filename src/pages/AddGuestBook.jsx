@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import { clearGuestbook, clearTodo, __addGuestbookThunk } from "../redux/modules/guestBooksSlice";
+import {__addGuestbookThunk } from "../redux/modules/guestBooksSlice";
 import styled from "styled-components";
 
 
@@ -20,19 +20,19 @@ const AddGuestBook = () => {
         username : "",
     });
 
-    useEffect(() => {
-        if (!isSuccess) return;
-        // isSuccess 가 false면 pending 상태니까 그냥 여기서 return
-        if (isSuccess) navigate("/guestbooks");
-        // 왜 계속 guestbooks로 이동하나 했더니 이거때문이었음 ㅠㅠ 한참 헤맴
-        // isSuccess 가 true면 fulfilled 상태니까 /works로 페이지 이동
+    // useEffect(() => {
+    //     if (!isSuccess) return;
+    //     // isSuccess 가 false면 pending 상태니까 그냥 여기서 return
+    //     if (isSuccess) navigate("/guestbooks");
+    //     // 왜 계속 guestbooks로 이동하나 했더니 이거때문이었음 ㅠㅠ 한참 헤맴
+    //     // isSuccess 가 true면 fulfilled 상태니까 /works로 페이지 이동
     
-        return () => dispatch(clearGuestbook());
-        // 그리고 클린업 실행해서 reducer의 clearTodo 함수로 가서 isSuccess
-        // 상태를 false로 바꿈
-      }, [dispatch, isSuccess, navigate]);
-        // 의존성 배열
-        // 이 값이 바뀔 때만 useEffect 실행
+    //     return () => dispatch(clearGuestbook());
+    //     // 그리고 클린업 실행해서 reducer의 clearTodo 함수로 가서 isSuccess
+    //     // 상태를 false로 바꿈
+    //   }, [dispatch, isSuccess, navigate]);
+    //     // 의존성 배열
+    //     // 이 값이 바뀔 때만 useEffect 실행
 
    
   
