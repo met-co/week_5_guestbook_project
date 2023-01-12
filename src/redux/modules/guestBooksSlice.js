@@ -7,7 +7,7 @@ export const __addGuestbookThunk = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:3001/guestBooks`,
+        `${process.env.REACT_APP_GUESTBOOK}`,
         payload
       );
       return thunkAPI.fulfillWithValue(data);
@@ -22,7 +22,7 @@ export const __getGuestbookThunk = createAsyncThunk(
   "GET_GUESTBOOKS",
   async (payload, thunkAPI) => {
     try {
-      const { data } = await axios.get(`http://localhost:3001/guestBooks`);
+      const { data } = await axios.get(`${process.env.REACT_APP_GUESTBOOK}`);
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -35,7 +35,7 @@ export const __deleteGuestbookThunk = createAsyncThunk(
   "DELETE_GUESTBOOK",
   async (payload, thunkAPI) => {
     try {
-      axios.delete(`http://localhost:3001/guestBooks/${payload}`);
+      axios.delete(`${process.env.REACT_APP_GUESTBOOK}/${payload}`);
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.code);
@@ -48,7 +48,7 @@ export const __updateGuestbookThunk = createAsyncThunk(
   "UPDATE_GUESTBOOK",
   async (payload, thunkAPI) => {
     try {
-      axios.patch(`http://localhost:3001/guestBooks/${payload.id}`, payload);
+      axios.patch(`${process.env.REACT_APP_GUESTBOOK}/${payload.id}`, payload);
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.code);
@@ -62,7 +62,7 @@ export const __getDetail = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:3001/guestBooks/${payload}`
+        `${process.env.REACT_APP_GUESTBOOK}/${payload}`
       );
       return data;
     } catch (error) {
